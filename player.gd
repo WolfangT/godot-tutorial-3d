@@ -1,5 +1,10 @@
 extends CharacterBody3D
 
+# Emitted when the player was hit by a mob.
+# Put this at the top of the script.
+signal hit
+signal jump
+
 # How fast the player moves in meters per second.
 @export var speed = 14
 # The downward acceleration when in the air, in meters per second squared.
@@ -16,6 +21,7 @@ var target_velocity = Vector3.ZERO
 var current_direction = Vector3.FORWARD
 var current_pitch = 0
 var last_y_velocity = 0
+var alive = true
 
 func _physics_process(delta):
     # We create a local variable to store the input direction.
@@ -38,6 +44,9 @@ func _physics_process(delta):
             var angle = current_direction.signed_angle_to(direction, Vector3.UP)
             var current_rotation = angle if abs(angle) <= rotation_speed * delta else rotation_speed * delta * sign(angle)
             current_direction = current_direction.rotated(Vector3.UP, current_rotation)
+            $AnimationPlayer.speed_scale = 4
+        else:
+            $AnimationPlayer.speed_scale = 1
         if target_velocity.y != last_y_velocity:
             current_pitch = atan(target_velocity.y / jump_impulse)
             last_y_velocity = position.y
@@ -54,6 +63,7 @@ func _physics_process(delta):
     # Jumping
     if is_on_floor() and Input.is_action_just_pressed("jump"):
         target_velocity.y = jump_impulse
+        jump.emit()
     # Check Collisions
     for index in range(get_slide_collision_count()):
         var collision = get_slide_collision(index)
@@ -68,3 +78,13 @@ func _physics_process(delta):
     # Moving the Character
     velocity = target_velocity
     move_and_slide()
+
+
+# And this function at the bottom.
+func die():
+    alive = false
+    hit.emit()
+    queue_free()
+
+func _on_mob_detector_body_entered(_body:Node3D) -> void:
+    die()
