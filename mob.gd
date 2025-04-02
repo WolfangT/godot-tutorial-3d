@@ -27,6 +27,7 @@ func initialize(start_position, player_position) -> void:
     velocity = velocity.rotated(Vector3.UP, rotation.y)
     rotation.x = 0
     rotation.z = 0
+    $AnimationPlayer.speed_scale = random_speed / min_speed
 
     
 func _on_visible_on_screen_notifier_3d_screen_exited() -> void:

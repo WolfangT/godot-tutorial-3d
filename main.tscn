@@ -1,8 +1,13 @@
-[gd_scene load_steps=9 format=3 uid="uid://dc1oollr2j220"]
+[gd_scene load_steps=14 format=3 uid="uid://dc1oollr2j220"]
 
 [ext_resource type="PackedScene" uid="uid://bsr8v470f5xby" path="res://player.tscn" id="1_ajuu2"]
 [ext_resource type="Script" uid="uid://hhpp11jkideh" path="res://main.gd" id="1_yc6q0"]
 [ext_resource type="PackedScene" uid="uid://bga73xu7rebk0" path="res://mob.tscn" id="2_86h6o"]
+[ext_resource type="Theme" uid="uid://dtx6t2233sqom" path="res://theme.tres" id="4_1bvp3"]
+[ext_resource type="Script" uid="uid://b1hudbs6h08c7" path="res://score_label.gd" id="5_lquwl"]
+[ext_resource type="AudioStream" uid="uid://ccafimpvi7m7e" path="res://sounds/jump.wav" id="6_7mycd"]
+[ext_resource type="AudioStream" uid="uid://lnoooyhpkqw2" path="res://sounds/loose.wav" id="7_5vw27"]
+[ext_resource type="AudioStream" uid="uid://b7ow127ovb3e8" path="res://sounds/score.wav" id="8_kek77"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_5igx4"]
 size = Vector3(60, 2, 60)
@@ -77,10 +82,68 @@ mesh = SubResource("CylinderMesh_in6y8")
 curve = SubResource("Curve3D_yfq80")
 
 [node name="SpawnLocation" type="PathFollow3D" parent="SpawnPath"]
-transform = Transform3D(-0.00092177, 0.00248669, -0.999996, -1.16415e-10, 0.999997, 0.00248669, 1, 2.29227e-06, -0.000921767, -12.4854, 0.139159, -13.4407)
+transform = Transform3D(-0.000921889, 0.00248669, -0.999996, -1.16415e-10, 0.999997, 0.00248669, 1, 2.29257e-06, -0.000921886, -12.4854, 0.139159, -13.4407)
 
 [node name="MobTimer" type="Timer" parent="."]
 wait_time = 0.5
 autostart = true
 
+[node name="UserInterface" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ScoreLabel" type="Label" parent="UserInterface"]
+layout_mode = 0
+offset_left = 21.0
+offset_top = 22.0
+offset_right = 82.0
+offset_bottom = 45.0
+theme = ExtResource("4_1bvp3")
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+text = "Score: 0"
+script = ExtResource("5_lquwl")
+
+[node name="Retry" type="ColorRect" parent="UserInterface"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.0980392, 0.0980392, 0.0980392, 0.501961)
+
+[node name="Label" type="Label" parent="UserInterface/Retry"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -78.0
+offset_top = -11.0
+offset_right = 76.0
+offset_bottom = 12.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "Press Enter to retry."
+
+[node name="JumpSound" type="AudioStreamPlayer3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -27.9493, 9.06548, 0)
+stream = ExtResource("6_7mycd")
+volume_db = 15.0
+
+[node name="LooseSound" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource("7_5vw27")
+volume_db = 15.0
+
+[node name="ScoreSound" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource("8_kek77")
+volume_db = 15.0
+
+[connection signal="hit" from="Player" to="." method="_on_player_hit"]
+[connection signal="jump" from="Player" to="." method="_on_player_jump"]
 [connection signal="timeout" from="MobTimer" to="." method="_on_mob_timer_timeout"]
