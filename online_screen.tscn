@@ -1,0 +1,57 @@
+[gd_scene load_steps=2 format=3 uid="uid://d16x6x2ssg8y2"]
+
+[ext_resource type="Script" uid="uid://b55fa25yfce65" path="res://online_screen.gd" id="1_1q4xg"]
+
+[node name="Control" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_1q4xg")
+
+[node name="IPLine" type="LineEdit" parent="."]
+layout_mode = 0
+offset_left = 383.0
+offset_top = 142.0
+offset_right = 546.0
+offset_bottom = 173.0
+text = "127.0.0.1"
+placeholder_text = "xxx.xxx.xxx.xxx"
+
+[node name="Label" type="Label" parent="."]
+layout_mode = 0
+offset_left = 259.0
+offset_top = 53.0
+offset_right = 419.0
+offset_bottom = 76.0
+text = "Start or Join a Game!"
+
+[node name="HostButton" type="Button" parent="."]
+layout_mode = 0
+offset_left = 85.0
+offset_top = 136.0
+offset_right = 252.0
+offset_bottom = 279.0
+text = "Host"
+
+[node name="ConnectButton" type="Button" parent="."]
+layout_mode = 0
+offset_left = 380.0
+offset_top = 214.0
+offset_right = 546.0
+offset_bottom = 277.0
+text = "Connect"
+
+[node name="StartButton" type="Button" parent="."]
+layout_mode = 0
+offset_left = 174.0
+offset_top = 407.0
+offset_right = 539.0
+offset_bottom = 488.0
+text = "Start Game!"
+
+[connection signal="pressed" from="HostButton" to="." method="_on_host_button_pressed"]
+[connection signal="pressed" from="ConnectButton" to="." method="_on_connect_button_pressed"]
+[connection signal="pressed" from="StartButton" to="." method="_on_start_button_pressed"]
