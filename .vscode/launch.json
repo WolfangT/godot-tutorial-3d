@@ -12,7 +12,7 @@
             "address": "127.0.0.1",
             "port": 6007,
             "scene": "main",
-            "editor_path": "C:/Users/wolfang/Projects/Godot_v4.3-stable_win64.exe",
+            "editor_path": "godot",
             // engine command line flags
             "profiling": false,
             "single_threaded_scene": false,
