@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://bsr8v470f5xby"]
+[gd_scene load_steps=9 format=3 uid="uid://bsr8v470f5xby"]
 
 [ext_resource type="Script" uid="uid://ogfmhupcx4e8" path="res://player.gd" id="1_is0fd"]
 [ext_resource type="PackedScene" uid="uid://tgmf6ocsojj0" path="res://art/player.glb" id="1_je8sm"]
@@ -45,6 +45,11 @@ _data = {
 &"float": ExtResource("3_i3pqv")
 }
 
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_i3pqv"]
+properties/0/path = NodePath(".:position")
+properties/0/spawn = true
+properties/0/replication_mode = 1
+
 [node name="Player" type="CharacterBody3D"]
 collision_mask = 6
 script = ExtResource("1_is0fd")
@@ -71,5 +76,8 @@ libraries = {
 &"": SubResource("AnimationLibrary_hqtel")
 }
 autoplay = "float"
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+replication_config = SubResource("SceneReplicationConfig_i3pqv")
 
 [connection signal="body_entered" from="MobDetector" to="." method="_on_mob_detector_body_entered"]

@@ -4,6 +4,7 @@ extends Control
 
 # Variables
 var ip_address : String
+var player_name : String
 @export var port = 8910
 var peer:ENetMultiplayerPeer
 
@@ -29,9 +30,22 @@ func peer_disconnected(id:int):
 	
 func connected_to_server():
 	print("Connected to Server")
+	SendPlayerInformation.rpc_id(1, multiplayer.get_unique_id(), $NameLine.text)
 
 func connection_failed():
 	print("Connection Failed")
+
+@rpc("any_peer", "call_remote")
+func SendPlayerInformation(id:int, _name:String):
+	if !GameManager.Players.has(id):
+		GameManager.Players[id] = {
+			"name" : _name,
+			"id" : id,
+			"score" : 0,
+		}
+	if multiplayer.is_server():
+		for i in GameManager.Players:
+			SendPlayerInformation.rpc(i,  GameManager.Players[i].name)
 
 @rpc("any_peer", "call_local")
 func StartGame():
@@ -43,12 +57,13 @@ func StartGame():
 
 func _on_host_button_pressed() -> void:
 	peer = ENetMultiplayerPeer.new()
-	var error = peer.create_server(port, 2)
+	var error = peer.create_server(port)
 	if error != OK:
 		print("Cannot host: %s" % error)
 		return
 	multiplayer.set_multiplayer_peer(peer)
 	print("Waiting for Players!")
+	SendPlayerInformation(multiplayer.get_unique_id(), $NameLine.text)
 
 func _on_connect_button_pressed() -> void:
 	ip_address = $IPLine.text

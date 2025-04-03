@@ -52,6 +52,14 @@ offset_right = 539.0
 offset_bottom = 488.0
 text = "Start Game!"
 
+[node name="NameLine" type="LineEdit" parent="."]
+layout_mode = 0
+offset_left = 237.0
+offset_top = 346.0
+offset_right = 483.0
+offset_bottom = 377.0
+placeholder_text = "Name"
+
 [connection signal="pressed" from="HostButton" to="." method="_on_host_button_pressed"]
 [connection signal="pressed" from="ConnectButton" to="." method="_on_connect_button_pressed"]
 [connection signal="pressed" from="StartButton" to="." method="_on_start_button_pressed"]
