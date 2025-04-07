@@ -24,6 +24,7 @@ func _reset():
 	for i in GameManager.Players:
 		var located = false
 		var current_player = player_scene.instantiate()
+		current_player.get_multiplayer_authority_id = GameManager.Players[i].id
 		players.append(current_player)
 		current_player.jump.connect(_on_player_jump.bind(current_player))
 		current_player.hit.connect(_on_player_hit.bind(current_player))
@@ -34,7 +35,7 @@ func _reset():
 				located = true
 				break
 		if not located:
-			current_player.global_position = $SpawnLocations/"0".global_position
+			current_player.global_position = $SpawnLocations / "0".global_position
 		index += 1
 	$MobTimer.start()
 
@@ -49,6 +50,8 @@ func _on_mob_timer_timeout() -> void:
 	add_child(mob)
 
 func _on_player_hit(player) -> void:
+	for _player in players:
+		_player.queue_free()
 	$LooseSound.global_position = player.global_position
 	$LooseSound.play()
 	$MobTimer.stop()

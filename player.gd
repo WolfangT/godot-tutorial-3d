@@ -22,8 +22,14 @@ var current_direction = Vector3.FORWARD
 var current_pitch = 0
 var last_y_velocity = 0
 var alive = true
+var get_multiplayer_authority_id: int
+
+func _ready():
+    $MultiplayerSynchronizer.set_multiplayer_authority(get_multiplayer_authority_id)
 
 func _physics_process(delta):
+    if not $MultiplayerSynchronizer.get_multiplayer_authority() == multiplayer.get_unique_id():
+        return
     # We create a local variable to store the input direction.
     var direction = Vector3.ZERO
     # We check for each move input and update the direction accordingly.
@@ -84,7 +90,6 @@ func _physics_process(delta):
 func die():
     alive = false
     hit.emit()
-    queue_free()
 
-func _on_mob_detector_body_entered(_body:Node3D) -> void:
+func _on_mob_detector_body_entered(_body: Node3D) -> void:
     die()
