@@ -2,9 +2,14 @@ extends Label
 
 var score = 0
 
-func _update():
-    text = "Score: %s" % score
+@rpc("any_peer", "call_local")
+func _update(_score):
+    text = "Score: %s" % _score
+
+@rpc("any_peer", "call_local")
+func _increment_score() -> void:
+    score += 1
+    _update.rpc(score)
 
 func _on_mob_squashed() -> void:
-    score += 1
-    _update()
+    _increment_score.rpc_id(1)

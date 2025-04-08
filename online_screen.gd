@@ -3,10 +3,10 @@ extends Control
 # Signals
 
 # Variables
-var ip_address : String
-var player_name : String
+var ip_address: String
+var player_name: String
 @export var port = 8910
-var peer:ENetMultiplayerPeer
+var peer: ENetMultiplayerPeer
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -22,10 +22,10 @@ func _process(_delta: float) -> void:
 
 # main functions
 
-func peer_connected(id:int):
+func peer_connected(id: int):
 	print("Player Connected: %s" % id)
 
-func peer_disconnected(id:int):
+func peer_disconnected(id: int):
 	print("Player Disconnected: %s" % id)
 	
 func connected_to_server():
@@ -36,16 +36,18 @@ func connection_failed():
 	print("Connection Failed")
 
 @rpc("any_peer", "call_remote")
-func SendPlayerInformation(id:int, _name:String):
+func SendPlayerInformation(id: int, _name: String):
 	if !GameManager.Players.has(id):
 		GameManager.Players[id] = {
-			"name" : _name,
-			"id" : id,
-			"score" : 0,
+			"name": _name,
+			"id": id,
+			"score": 0,
+			"model": null,
+			"alive": false,
 		}
 	if multiplayer.is_server():
 		for i in GameManager.Players:
-			SendPlayerInformation.rpc(i,  GameManager.Players[i].name)
+			SendPlayerInformation.rpc(i, GameManager.Players[i].name)
 
 @rpc("any_peer", "call_local")
 func StartGame():
@@ -67,7 +69,7 @@ func _on_host_button_pressed() -> void:
 
 func _on_connect_button_pressed() -> void:
 	ip_address = $IPLine.text
-	print("ip_address %s" % ip_address) 
+	print("ip_address %s" % ip_address)
 	peer = ENetMultiplayerPeer.new()
 	peer.create_client(ip_address, port)
 	multiplayer.set_multiplayer_peer(peer)

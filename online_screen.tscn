@@ -13,10 +13,10 @@ script = ExtResource("1_1q4xg")
 
 [node name="IPLine" type="LineEdit" parent="."]
 layout_mode = 0
-offset_left = 383.0
-offset_top = 142.0
-offset_right = 546.0
-offset_bottom = 173.0
+offset_left = 370.0
+offset_top = 143.0
+offset_right = 533.0
+offset_bottom = 174.0
 text = "127.0.0.1"
 placeholder_text = "xxx.xxx.xxx.xxx"
 
@@ -30,17 +30,17 @@ text = "Start or Join a Game!"
 
 [node name="HostButton" type="Button" parent="."]
 layout_mode = 0
-offset_left = 85.0
-offset_top = 136.0
-offset_right = 252.0
-offset_bottom = 279.0
+offset_left = 188.0
+offset_top = 137.0
+offset_right = 355.0
+offset_bottom = 280.0
 text = "Host"
 
 [node name="ConnectButton" type="Button" parent="."]
 layout_mode = 0
-offset_left = 380.0
+offset_left = 368.0
 offset_top = 214.0
-offset_right = 546.0
+offset_right = 534.0
 offset_bottom = 277.0
 text = "Connect"
 
