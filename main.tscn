@@ -1,18 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://cbw6ns7sp8v03"]
 
-[sub_resource type="GDScript" id="GDScript_7dm0k"]
-script/source = "extends Node
-
-
-# Called when the node enters the scene tree for the first time.
-func _ready() -> void:
-	pass # Replace with function body.
-
-
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta: float) -> void:
-	pass
-"
+[ext_resource type="Script" uid="uid://cq24vmwdhwdys" path="res://main.gd" id="1_cq24v"]
 
 [node name="Main" type="Node"]
-script = SubResource("GDScript_7dm0k")
+script = ExtResource("1_cq24v")

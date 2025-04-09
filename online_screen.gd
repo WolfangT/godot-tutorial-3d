@@ -14,7 +14,8 @@ func _ready() -> void:
 	multiplayer.peer_disconnected.connect(peer_disconnected)
 	multiplayer.connected_to_server.connect(connected_to_server)
 	multiplayer.connection_failed.connect(connection_failed)
-
+	if GameManager.DedicatedServer:
+		hostGame()
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta: float) -> void:
@@ -55,9 +56,7 @@ func StartGame():
 	get_tree().root.add_child(scene)
 	hide()
 
-# callbacks
-
-func _on_host_button_pressed() -> void:
+func hostGame():
 	peer = ENetMultiplayerPeer.new()
 	var error = peer.create_server(port)
 	if error != OK:
@@ -65,6 +64,11 @@ func _on_host_button_pressed() -> void:
 		return
 	multiplayer.set_multiplayer_peer(peer)
 	print("Waiting for Players!")
+
+# callbacks
+
+func _on_host_button_pressed() -> void:
+	hostGame()
 	SendPlayerInformation(multiplayer.get_unique_id(), $NameLine.text)
 
 func _on_connect_button_pressed() -> void:

@@ -1,9 +1,9 @@
 extends CharacterBody3D
 
 # Minimum speed of the mob in meters per second.
-@export var min_speed = 10
+@export var min_speed = 10.0
 # Maximum speed of the mob in meters per second.
-@export var max_speed = 18
+@export var max_speed = 18.0
 
 signal squashed
 
@@ -35,4 +35,4 @@ func _on_visible_on_screen_notifier_3d_screen_exited() -> void:
 
 func squash(bounce_impulse):
     squashed.emit()
-    velocity.y = -bounce_impulse
+    velocity.y = - bounce_impulse

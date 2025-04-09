@@ -15,6 +15,7 @@ func _process(_delta) -> void:
 		var local_manager = GameManager.Players[multiplayer.get_unique_id()]
 		if local_manager.alive:
 			$CameraPivot.position = local_manager.model.position
+			$CameraPivot.position.y = 0
 
 @rpc("any_peer", "call_local")
 func _reset():
