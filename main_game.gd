@@ -84,3 +84,7 @@ func get_alive_players() -> Array:
 		if GameManager.Players[i].alive:
 			alive_players.append(GameManager.Players[i].model)
 	return alive_players
+
+
+func _on_fall_detector_body_entered(body:Node3D) -> void:
+	body.die.rpc()
