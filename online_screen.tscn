@@ -13,10 +13,10 @@ script = ExtResource("1_1q4xg")
 
 [node name="IPLine" type="LineEdit" parent="."]
 layout_mode = 0
-offset_left = 370.0
-offset_top = 143.0
-offset_right = 533.0
-offset_bottom = 174.0
+offset_left = 361.0
+offset_top = 181.0
+offset_right = 524.0
+offset_bottom = 212.0
 text = "127.0.0.1"
 placeholder_text = "xxx.xxx.xxx.xxx"
 
@@ -30,35 +30,44 @@ text = "Start or Join a Game!"
 
 [node name="HostButton" type="Button" parent="."]
 layout_mode = 0
-offset_left = 188.0
-offset_top = 137.0
-offset_right = 355.0
-offset_bottom = 280.0
+offset_left = 186.0
+offset_top = 161.0
+offset_right = 353.0
+offset_bottom = 304.0
 text = "Host"
 
 [node name="ConnectButton" type="Button" parent="."]
 layout_mode = 0
-offset_left = 368.0
-offset_top = 214.0
-offset_right = 534.0
-offset_bottom = 277.0
+offset_left = 362.0
+offset_top = 241.0
+offset_right = 528.0
+offset_bottom = 304.0
 text = "Connect"
 
 [node name="StartButton" type="Button" parent="."]
 layout_mode = 0
-offset_left = 174.0
-offset_top = 407.0
-offset_right = 539.0
-offset_bottom = 488.0
+offset_left = 358.0
+offset_top = 417.0
+offset_right = 608.0
+offset_bottom = 498.0
 text = "Start Game!"
 
 [node name="NameLine" type="LineEdit" parent="."]
 layout_mode = 0
-offset_left = 237.0
-offset_top = 346.0
-offset_right = 483.0
-offset_bottom = 377.0
+offset_left = 227.0
+offset_top = 93.0
+offset_right = 473.0
+offset_bottom = 124.0
 placeholder_text = "Name"
+
+[node name="PlayersList" type="Label" parent="."]
+layout_mode = 0
+offset_left = 96.0
+offset_top = 324.0
+offset_right = 342.0
+offset_bottom = 510.0
+text = "Players List
+========="
 
 [connection signal="pressed" from="HostButton" to="." method="_on_host_button_pressed"]
 [connection signal="pressed" from="ConnectButton" to="." method="_on_connect_button_pressed"]

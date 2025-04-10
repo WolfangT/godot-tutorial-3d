@@ -16,6 +16,7 @@ func _init() -> void:
 func _ready() -> void:
 	multiplayer.peer_connected.connect(peer_connected)
 	multiplayer.peer_disconnected.connect(peer_disconnected)
+	multiplayer.server_disconnected.connect(server_disconnected)
 	multiplayer.connected_to_server.connect(connected_to_server)
 	multiplayer.connection_failed.connect(connection_failed)
 	if GameManager.DedicatedServer:
@@ -32,6 +33,7 @@ func peer_connected(id: int):
 
 func peer_disconnected(id: int):
 	print("Player Disconnected: %s" % id)
+	RemovePlayerInformation.rpc(id)
 	
 func connected_to_server():
 	print("Connected to Server")
@@ -39,6 +41,12 @@ func connected_to_server():
 
 func connection_failed():
 	print("Connection Failed")
+
+func server_disconnected():
+	print("Server Disconected")
+	get_tree().root.get_node("MainGame").playing = false
+	get_tree().root.get_node("MainGame").queue_free()
+	get_tree().change_scene_to_file("res://main.tscn")
 
 @rpc("any_peer", "call_remote")
 func SendPlayerInformation(id: int, _name: String):
@@ -53,6 +61,16 @@ func SendPlayerInformation(id: int, _name: String):
 	if multiplayer.is_server():
 		for i in GameManager.Players:
 			SendPlayerInformation.rpc(i, GameManager.Players[i].name)
+	update_player_list()
+
+@rpc("any_peer", "call_local")
+func RemovePlayerInformation(id: int):
+	if GameManager.Players.has(id):
+		if GameManager.Players[id].model != null:
+			GameManager.Players[id].model.queue_free()
+		GameManager.Players.erase(id)
+	update_player_list()
+	
 
 @rpc("any_peer", "call_local")
 func StartGame():
@@ -67,6 +85,18 @@ func hostGame():
 		return
 	multiplayer.set_multiplayer_peer(peer)
 	print("Waiting for Players!")
+
+func update_player_list():
+	var players_text = "Players List\n========\n"
+	for id in GameManager.Players:
+		if GameManager.Players[id].name == null or  GameManager.Players[id].name == "":
+			players_text += "- %s" % id
+		else:
+			players_text += "- %s" % GameManager.Players[id].name
+		if id == 1:
+			players_text += " (host)"
+		players_text += "\n"
+	$PlayersList.text = players_text
 
 # callbacks
 

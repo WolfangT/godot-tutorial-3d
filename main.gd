@@ -3,7 +3,7 @@ extends Node
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	if OS.has_feature("dedicated_server"):
+	if OS.has_feature("dedicated_server") or DisplayServer.get_name() == "headless":
 		GameManager.DedicatedServer = true
 		RenderingServer.render_loop_enabled = false
 	else:

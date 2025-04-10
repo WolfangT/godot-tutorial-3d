@@ -8,10 +8,10 @@ var playing = true
 
 func _ready():
 	$MultiplayerSynchronizer.set_multiplayer_authority(1)
-	_reset()
+	_reset.rpc()
 
 func _process(_delta) -> void:
-	if playing:
+	if playing and GameManager.Players.has(multiplayer.get_unique_id()):
 		var local_manager = GameManager.Players[multiplayer.get_unique_id()]
 		if local_manager.alive:
 			$CameraPivot.position = local_manager.model.position
@@ -28,6 +28,8 @@ func _reset():
 		var located = false
 		var current_player = player_scene.instantiate()
 		current_player.get_multiplayer_authority_id = _id
+		if GameManager.Players[_id].model != null:
+			GameManager.Players[_id].model.queue_free()
 		GameManager.Players[_id].model = current_player
 		GameManager.Players[_id].alive = true
 		current_player.jump.connect(_on_player_jump.bind(current_player))
@@ -47,7 +49,12 @@ func _on_mob_timer_timeout() -> void:
 	var mob = mob_scene.instantiate()
 	var mob_spawn_location = get_node("SpawnPath/SpawnLocation")
 	mob_spawn_location.progress_ratio = randf()
-	var player_position = get_alive_players().pick_random().position
+	var players = get_alive_players()
+	var player_position: Vector3
+	if len(players) == 0:
+		player_position = Vector3.ZERO
+	else:
+		player_position = players.pick_random().position
 	mob.initialize(mob_spawn_location.position, player_position)
 	mob.squashed.connect($UserInterface/ScoreLabel._on_mob_squashed)
 	mob.squashed.connect(_on_mob_squashed.bind(mob))
@@ -58,10 +65,6 @@ func _on_player_hit(_id, player) -> void:
 	player.queue_free()
 	$LooseSound.global_position = player.global_position
 	$LooseSound.play()
-	if len(get_alive_players()) == 0:
-		$MobTimer.stop()
-		$UserInterface/Retry.show()
-		playing = false
 
 func _unhandled_input(event):
 	if event.is_action_pressed("ui_accept") and $UserInterface/Retry.visible:
@@ -72,7 +75,8 @@ func _on_player_jump(player) -> void:
 	$JumpSound.global_position = player.global_position
 	$JumpSound.play()
 
-func _on_mob_squashed(mob) -> void:
+func _on_mob_squashed(player_id, mob) -> void:
+	# GameManager.Players[player_id].score += 1
 	$JumpSound.global_position = mob.global_position
 	$ScoreSound.play()
 
@@ -83,6 +87,10 @@ func get_alive_players() -> Array:
 	for i in GameManager.Players:
 		if GameManager.Players[i].alive:
 			alive_players.append(GameManager.Players[i].model)
+	if len(alive_players) == 0:
+		$MobTimer.stop()
+		$UserInterface/Retry.show()
+		playing = false
 	return alive_players
 
 

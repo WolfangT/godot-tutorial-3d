@@ -85,7 +85,7 @@ func _physics_process(delta):
 		if collision.get_collider().is_in_group("mob"):
 			var mob = collision.get_collider()
 			if Vector3.UP.dot(collision.get_normal()) > 0.3:
-				mob.squash(bounce_impulse)
+				mob.squash(bounce_impulse,  multiplayer.get_unique_id())
 				target_velocity.y = bounce_impulse
 				break
 	# Moving the Character

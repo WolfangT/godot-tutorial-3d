@@ -33,6 +33,6 @@ func initialize(start_position, player_position) -> void:
 func _on_visible_on_screen_notifier_3d_screen_exited() -> void:
     queue_free()
 
-func squash(bounce_impulse):
-    squashed.emit()
+func squash(bounce_impulse, player_id):
+    squashed.emit(player_id)
     velocity.y = - bounce_impulse
