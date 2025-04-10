@@ -6,7 +6,11 @@ extends Control
 var ip_address: String
 var player_name: String
 @export var port = 8910
-var peer: ENetMultiplayerPeer
+var peer := WebSocketMultiplayerPeer.new()
+
+
+func _init() -> void:
+	peer.supported_protocols = ["ludus"]
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -57,7 +61,6 @@ func StartGame():
 	hide()
 
 func hostGame():
-	peer = ENetMultiplayerPeer.new()
 	var error = peer.create_server(port)
 	if error != OK:
 		print("Cannot host: %s" % error)
@@ -73,9 +76,8 @@ func _on_host_button_pressed() -> void:
 
 func _on_connect_button_pressed() -> void:
 	ip_address = $IPLine.text
-	print("ip_address %s" % ip_address)
-	peer = ENetMultiplayerPeer.new()
-	peer.create_client(ip_address, port)
+	print("ip_address %s" % ip_address) 
+	peer.create_client("ws://" + ip_address + ":" + str(port))
 	multiplayer.set_multiplayer_peer(peer)
 
 func _on_start_button_pressed() -> void:
