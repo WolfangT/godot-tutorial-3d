@@ -78,8 +78,16 @@ func StartGame():
 	get_tree().root.add_child(scene)
 	hide()
 
+func create_tls_options() -> TLSOptions:
+	var server_certs = X509Certificate.new()
+	server_certs.load("/etc/letsencrypt/live/www.wolfang.info.ve/cert.pem")
+	var server_key = CryptoKey.new()
+	server_key.load("/etc/letsencrypt/live/www.wolfang.info.ve/privkey.pem")
+	var server_tls_options = TLSOptions.server(server_key, server_certs)
+	return server_tls_options
+
 func hostGame():
-	var error = peer.create_server(port)
+	var error = peer.create_server(port, "0.0.0.0", create_tls_options())
 	if error != OK:
 		print("Cannot host: %s" % error)
 		return
@@ -107,7 +115,7 @@ func _on_host_button_pressed() -> void:
 func _on_connect_button_pressed() -> void:
 	ip_address = $IPLine.text
 	print("ip_address %s" % ip_address) 
-	peer.create_client("ws://" + ip_address + ":" + str(port))
+	peer.create_client("wss://" + ip_address + ":" + str(port), TLSOptions.client_unsafe())
 	multiplayer.set_multiplayer_peer(peer)
 
 func _on_start_button_pressed() -> void:
