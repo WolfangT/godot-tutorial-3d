@@ -16,5 +16,5 @@ mono_crash.*.json
 
 # vscode
 .vscode/
-build/
-!build/web/*
+build/*
+!build/web/

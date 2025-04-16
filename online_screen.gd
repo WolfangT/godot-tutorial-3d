@@ -5,7 +5,7 @@ extends Control
 # Variables
 var ip_address: String
 var player_name: String
-@export var port = 8910
+@export var port := 8910
 var peer := WebSocketMultiplayerPeer.new()
 
 
@@ -28,28 +28,28 @@ func _process(_delta: float) -> void:
 
 # main functions
 
-func peer_connected(id: int):
+func peer_connected(id: int) -> void:
 	print("Player Connected: %s" % id)
 
-func peer_disconnected(id: int):
+func peer_disconnected(id: int) -> void:
 	print("Player Disconnected: %s" % id)
 	RemovePlayerInformation.rpc(id)
 	
-func connected_to_server():
+func connected_to_server() -> void:
 	print("Connected to Server")
 	SendPlayerInformation.rpc_id(1, multiplayer.get_unique_id(), $NameLine.text)
 
-func connection_failed():
+func connection_failed() -> void:
 	print("Connection Failed")
 
-func server_disconnected():
+func server_disconnected() -> void:
 	print("Server Disconected")
 	get_tree().root.get_node("MainGame").playing = false
 	get_tree().root.get_node("MainGame").queue_free()
 	get_tree().change_scene_to_file("res://main.tscn")
 
 @rpc("any_peer", "call_remote")
-func SendPlayerInformation(id: int, _name: String):
+func SendPlayerInformation(id: int, _name: String) -> void:
 	if !GameManager.Players.has(id):
 		GameManager.Players[id] = {
 			"name": _name,
@@ -73,28 +73,28 @@ func RemovePlayerInformation(id: int):
 	
 
 @rpc("any_peer", "call_local")
-func StartGame():
+func StartGame() -> void:
 	var scene = load("res://main_game.tscn").instantiate()
 	get_tree().root.add_child(scene)
 	hide()
 
 func create_tls_options() -> TLSOptions:
-	var server_certs = X509Certificate.new()
+	var server_certs := X509Certificate.new()
 	server_certs.load("/etc/letsencrypt/live/www.wolfang.info.ve/cert.pem")
-	var server_key = CryptoKey.new()
+	var server_key := CryptoKey.new()
 	server_key.load("/etc/letsencrypt/live/www.wolfang.info.ve/privkey.pem")
-	var server_tls_options = TLSOptions.server(server_key, server_certs)
+	var server_tls_options := TLSOptions.server(server_key, server_certs)
 	return server_tls_options
 
-func hostGame():
-	var error = peer.create_server(port, "0.0.0.0", create_tls_options())
+func hostGame() -> void:
+	var error := peer.create_server(port, "0.0.0.0", create_tls_options())
 	if error != OK:
 		print("Cannot host: %s" % error)
 		return
 	multiplayer.set_multiplayer_peer(peer)
 	print("Waiting for Players!")
 
-func update_player_list():
+func update_player_list() -> void:
 	var players_text = "Players List\n========\n"
 	for id in GameManager.Players:
 		if GameManager.Players[id].name == null or  GameManager.Players[id].name == "":
