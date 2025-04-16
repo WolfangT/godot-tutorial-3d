@@ -12,9 +12,9 @@ jobs:
             ARGS: "-rlgoDzvc -i"
             REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
             REMOTE_USER: ${{ secrets.REMOTE_USER }}
-            SOURCE: "build/web"
+            SOURCE: "./build/web"
             TARGET: "/var/www/squash"
-            EXCLUDE: ""
+            EXCLUDE: "/node_modules/"
             SCRIPT_BEFORE: |
               whoami
               ls -al
