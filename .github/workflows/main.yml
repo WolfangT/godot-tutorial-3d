@@ -1,17 +1,24 @@
-- name: Deploy to Staging server
-  uses: easingthemes/ssh-deploy@main
-  with:
-    SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-    ARGS: "-rlgoDzvc -i"
-    SOURCE: "dist/"
-    REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
-    REMOTE_USER: ${{ secrets.REMOTE_USER }}
-    TARGET: ${{ secrets.REMOTE_TARGET }}
-    EXCLUDE: "/dist/, /node_modules/"
-    SCRIPT_BEFORE: |
-      whoami
-      ls -al
-    SCRIPT_AFTER: |
-      whoami
-      ls -al
-      echo $RSYNC_STDOUT
+name: learn-github-actions
+run-name: ${{ github.actor }} is learning GitHub Actions
+on: [push]
+jobs:
+  deploy:
+      runs-on: ubuntu-latest # Run this job on the latest Ubuntu version
+      steps:
+        - name: Deploy to Staging server
+          uses: easingthemes/ssh-deploy@main
+          with:
+            SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+            ARGS: "-rlgoDzvc -i"
+            SOURCE: "dist/"
+            REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
+            REMOTE_USER: ${{ secrets.REMOTE_USER }}
+            TARGET: ${{ secrets.REMOTE_TARGET }}
+            EXCLUDE: "/dist/, /node_modules/"
+            SCRIPT_BEFORE: |
+              whoami
+              ls -al
+            SCRIPT_AFTER: |
+              whoami
+              ls -al
+              echo $RSYNC_STDOUT
