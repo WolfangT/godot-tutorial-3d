@@ -45,10 +45,10 @@ const SSL_CERT_PATH = "/etc/letsencrypt/live/www.wolfang.info.ve/cert.pem"
 const SSL_KEY_PATH = "/etc/letsencrypt/live/www.wolfang.info.ve/privkey.pem"
 	
 
-https_server = HttpsServer({
-    cert: fs.readFileSync(SSL_CERT_PATH),
-    key: fs.readFileSync(SSL_KEY_PATH)
-}).listen(PORT, "0.0.0.0")
+// https_server = HttpsServer({
+//     cert: fs.readFileSync(SSL_CERT_PATH),
+//     key: fs.readFileSync(SSL_KEY_PATH)
+// }).listen(PORT, "0.0.0.0")
 
 function randomInt(low, high) {
 	return Math.floor(Math.random() * (high - low + 1) + low);
@@ -74,7 +74,10 @@ function ProtoMessage(type, id, data) {
 	});
 }
 
-const wss = new WebSocket.Server({server: https_server});
+const wss = new WebSocket.Server({
+	// server: https_server
+	port: PORT
+});
 
 class ProtoError extends Error {
 	constructor(code, message) {
