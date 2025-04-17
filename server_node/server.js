@@ -48,7 +48,7 @@ const SSL_KEY_PATH = "/etc/letsencrypt/live/www.wolfang.info.ve/privkey.pem"
 https_server = HttpsServer({
     cert: fs.readFileSync(SSL_CERT_PATH),
     key: fs.readFileSync(SSL_KEY_PATH)
-}).listen(PORT)
+}).listen(PORT, "0.0.0.0")
 
 function randomInt(low, high) {
 	return Math.floor(Math.random() * (high - low + 1) + low);
