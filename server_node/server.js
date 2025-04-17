@@ -1,3 +1,5 @@
+#!/usr/bin/node
+
 const WebSocket = require('ws');
 const crypto = require('crypto');
 

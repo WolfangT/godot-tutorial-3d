@@ -21,16 +21,16 @@ jobs:
           pwd
           ls -al
           scp -o StrictHostKeyChecking=no -i private_key.pem ./build/web/*  \
-            ${{ secrets.REMOTE_USER }}@${{ secrets.REMOTE_HOST }}:/var/www/squash
+              ${{ secrets.REMOTE_USER }}@${{ secrets.REMOTE_HOST }}:/var/www/squash
           scp -o StrictHostKeyChecking=no -i private_key.pem ./server_node/* \
-            ${{ secrets.REMOTE_USER }}@${{ secrets.REMOTE_HOST }}:/var/www/squash_server
+              ${{ secrets.REMOTE_USER }}@${{ secrets.REMOTE_HOST }}:/var/www/squash_server
 
           # Establish an SSH connection and execute commands on the remote server
           ssh -o StrictHostKeyChecking=no -i private_key.pem \
-            ${{ secrets.REMOTE_USER }}@${{ secrets.REMOTE_HOST }} <<EOF
-            # Your server commands go here. Replace these commands with those relevant to your project.
-            pwd
-            ls
+              ${{ secrets.REMOTE_USER }}@${{ secrets.REMOTE_HOST }} <<EOF
+            cd /var/www/squash_server
+            npm install
+            systemctl restart squash_server.service
           EOF
 
           rm -f private_key.pem # Remove the private key file after use for security
