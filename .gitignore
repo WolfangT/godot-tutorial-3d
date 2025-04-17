@@ -18,3 +18,4 @@ mono_crash.*.json
 .vscode/
 build/*
 !build/web/
+server_node/package-lock.json
