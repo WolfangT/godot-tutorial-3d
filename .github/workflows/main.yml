@@ -1,4 +1,4 @@
-name:  Deploy
+name: Deploy
 # Trigger this workflow on pushes to the specified branch
 on:
   push:
@@ -19,12 +19,15 @@ jobs:
           echo "$PRIVATE_KEY" > private_key.pem # Write the private key to a file
           chmod 600 private_key.pem # Set the appropriate permissions for the key file
           pwd
+          ls -al
+          scp -i private_key.pem ./build/web/* root@wolfang.info.ve:/var/www/squash
+          scp -i private_key.pem ./server_node/* root@wolfang.info.ve:/var/www/squash_server
 
           # Establish an SSH connection and execute commands on the remote server
           ssh -o StrictHostKeyChecking=no -i private_key.pem ${{ secrets.REMOTE_USER }}@${{ secrets.REMOTE_HOST }} <<EOF
             # Your server commands go here. Replace these commands with those relevant to your project.
             pwd
-            ls          
+            ls
           EOF
 
           rm -f private_key.pem # Remove the private key file after use for security
