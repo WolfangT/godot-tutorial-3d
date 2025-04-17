@@ -76,7 +76,8 @@ function ProtoMessage(type, id, data) {
 
 const wss = new WebSocket.Server({
 	// server: https_server
-	port: PORT
+	port: PORT,
+	host : '0.0.0.0' 
 });
 
 class ProtoError extends Error {
