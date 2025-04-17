@@ -48,7 +48,7 @@ const SSL_KEY_PATH = "/etc/letsencrypt/live/www.wolfang.info.ve/privkey.pem"
 https_server = HttpsServer({
     cert: fs.readFileSync(SSL_CERT_PATH),
     key: fs.readFileSync(SSL_KEY_PATH)
-})
+}).listen(PORT)
 
 function randomInt(low, high) {
 	return Math.floor(Math.random() * (high - low + 1) + low);
@@ -74,7 +74,7 @@ function ProtoMessage(type, id, data) {
 	});
 }
 
-const wss = new WebSocket.Server({ port: PORT, server: https_server});
+const wss = new WebSocket.Server({server: https_server});
 
 class ProtoError extends Error {
 	constructor(code, message) {
