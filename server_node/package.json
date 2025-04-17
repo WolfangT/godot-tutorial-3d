@@ -7,9 +7,9 @@
     "ws": "^7.5.9"
   },
   "devDependencies": {
-    "eslint": "^8.28.0",
-    "eslint-config-airbnb-base": "^14.2.1",
-    "eslint-plugin-import": "^2.23.4"
+    "eslint": "8.57.1",
+    "eslint-config-airbnb-base": "14.2.1",
+    "eslint-plugin-import": "2.23.4"
   },
   "scripts": {
     "lint": "eslint server.js && echo \"Lint OK\" && exit 0",
