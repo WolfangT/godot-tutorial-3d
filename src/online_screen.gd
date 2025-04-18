@@ -71,6 +71,7 @@ func _on_client_lobby_sealed() -> void:
 	print("[Signaling] Lobby has been sealed")
 
 func _on_client_finished_connection() -> void:
+	print("[Multiplayer] Sending Personal Info to the Server")
 	send_player_information.rpc_id(1, multiplayer.get_unique_id(), $NameLine.text)
 
 
