@@ -8,7 +8,7 @@ func _ready() -> void:
 		RenderingServer.render_loop_enabled = false
 	else:
 		get_tree().root.get_node("MusicPlayer").play()
-	get_tree().root.add_child.call_deferred(load("res://online_screen.tscn").instantiate())
+	get_tree().root.add_child.call_deferred(load("res://src/online_screen.tscn").instantiate())
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.

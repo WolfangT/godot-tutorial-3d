@@ -15,10 +15,14 @@ run/main_scene="uid://cbw6ns7sp8v03"
 config/features=PackedStringArray("4.4")
 config/icon="res://icon.png"
 
+[audio]
+
+buses/default_bus_layout="res://art/default_bus_layout.tres"
+
 [autoload]
 
-MusicPlayer="*res://music_player.tscn"
-GameManager="*res://GameManager.gd"
+MusicPlayer="*res://src/music_player.tscn"
+GameManager="*res://src/GameManager.gd"
 
 [display]
 

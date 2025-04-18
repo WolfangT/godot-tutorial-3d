@@ -1,0 +1,83 @@
+[gd_scene load_steps=3 format=3 uid="uid://d16x6x2ssg8y2"]
+
+[ext_resource type="Script" uid="uid://b55fa25yfce65" path="res://src/online_screen.gd" id="1_1q4xg"]
+[ext_resource type="Script" uid="uid://cs4vx0irsgyv4" path="res://src/networking/multiplayer_client.gd" id="2_tx8if"]
+
+[node name="Control" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_1q4xg")
+
+[node name="Client" type="Node" parent="."]
+script = ExtResource("2_tx8if")
+
+[node name="LobbyLine" type="LineEdit" parent="."]
+layout_mode = 0
+offset_left = 194.0
+offset_top = 172.0
+offset_right = 572.0
+offset_bottom = 203.0
+placeholder_text = "Lobby ID"
+
+[node name="Label" type="Label" parent="."]
+layout_mode = 0
+offset_left = 291.0
+offset_top = 54.0
+offset_right = 451.0
+offset_bottom = 77.0
+text = "Start or Join a Game!"
+
+[node name="HostButton" type="Button" parent="."]
+layout_mode = 0
+offset_left = 190.0
+offset_top = 232.0
+offset_right = 362.0
+offset_bottom = 295.0
+text = "Host"
+
+[node name="ConnectButton" type="Button" parent="."]
+layout_mode = 0
+offset_left = 390.0
+offset_top = 232.0
+offset_right = 572.0
+offset_bottom = 295.0
+text = "Connect"
+
+[node name="StartButton" type="Button" parent="."]
+layout_mode = 0
+offset_left = 388.0
+offset_top = 435.0
+offset_right = 579.0
+offset_bottom = 499.0
+disabled = true
+text = "Start Game!"
+
+[node name="NameLine" type="LineEdit" parent="."]
+layout_mode = 0
+offset_left = 259.0
+offset_top = 93.0
+offset_right = 505.0
+offset_bottom = 124.0
+placeholder_text = "Name"
+
+[node name="PlayersList" type="TextEdit" parent="."]
+layout_mode = 0
+offset_left = 99.0
+offset_top = 334.0
+offset_right = 359.0
+offset_bottom = 503.0
+text = "Currently not in lobby"
+editable = false
+
+[connection signal="connected" from="Client" to="." method="_on_client_connected"]
+[connection signal="disconnected" from="Client" to="." method="_on_client_disconnected"]
+[connection signal="finished_connection" from="Client" to="." method="_on_client_finished_connection"]
+[connection signal="lobby_joined" from="Client" to="." method="_on_client_lobby_joined"]
+[connection signal="lobby_sealed" from="Client" to="." method="_on_client_lobby_sealed"]
+[connection signal="pressed" from="HostButton" to="." method="_on_host_button_pressed"]
+[connection signal="pressed" from="ConnectButton" to="." method="_on_connect_button_pressed"]
+[connection signal="pressed" from="StartButton" to="." method="_on_start_button_pressed"]
