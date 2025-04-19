@@ -53,8 +53,8 @@ properties/1/path = NodePath(".:syncRot")
 properties/1/spawn = true
 properties/1/replication_mode = 1
 
-[node name="Player" type="CharacterBody3D"]
-collision_mask = 6
+[node name="Player" type="CharacterBody3D" groups=["players"]]
+collision_mask = 7
 script = ExtResource("1_is0fd")
 
 [node name="Pivot" type="Node3D" parent="."]

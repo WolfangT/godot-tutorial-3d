@@ -1,14 +1,23 @@
 extends Node
 
+# Variables
 @export var mob_scene: PackedScene
 @export var player_scene: PackedScene
 
 var playing = true
 
+# Node process
 
-func _ready():
+func _init() -> void:
+	pass
+
+func _ready() -> void:
 	$MultiplayerSynchronizer.set_multiplayer_authority(1)
+	$MultiplayerSpawner.set_multiplayer_authority(1)
+	$MultiplayerSpawner.set_spawn_function(_spawn_creep)
 	_reset.rpc()
+	if multiplayer.is_server():
+		$MobTimer.start()
 
 func _process(_delta) -> void:
 	if playing and GameManager.Players.has(multiplayer.get_unique_id()):
@@ -16,6 +25,15 @@ func _process(_delta) -> void:
 		if local_manager.alive:
 			$CameraPivot.position = local_manager.model.position
 			$CameraPivot.position.y = 0
+	if multiplayer.is_server():
+		$MobTimer.wait_time = get_spawn_time()
+
+func _unhandled_input(event) -> void:
+	if event.is_action_pressed("ui_accept") and $UserInterface/Retry.visible:
+		# This restarts the current scene.
+		_reset.rpc()
+
+# Main functions
 
 @rpc("any_peer", "call_local")
 func _reset():
@@ -34,6 +52,7 @@ func _reset():
 		GameManager.Players[_id].alive = true
 		current_player.jump.connect(_on_player_jump.bind(current_player))
 		current_player.hit.connect(_on_player_hit.bind(_id, current_player))
+		current_player.squashed.connect($UserInterface/ScoreLabel._on_player_squashed)
 		add_child(current_player, true)
 		for spawn in get_tree().get_nodes_in_group("PlayerSpawnPoint"):
 			if spawn.name == str(index):
@@ -45,20 +64,26 @@ func _reset():
 		index += 1
 	$MobTimer.start()
 
-func _on_mob_timer_timeout() -> void:
+func _spawn_creep(data) -> Node:
 	var mob = mob_scene.instantiate()
 	var mob_spawn_location = get_node("SpawnPath/SpawnLocation")
-	mob_spawn_location.progress_ratio = randf()
-	var players = get_alive_players()
+	mob_spawn_location.progress_ratio = data[0]
+	mob.initialize(mob_spawn_location.position, data[1], get_mob_speed_mult())
+	mob.squashed.connect($UserInterface/ScoreLabel._on_mob_squashed)
+	mob.squashed.connect(_on_mob_squashed.bind(mob))
+	return mob
+
+# Callbacks
+
+func _on_mob_timer_timeout() -> void:
+	var progress_ratio: float = randf()
+	var players := get_alive_players()
 	var player_position: Vector3
 	if len(players) == 0:
 		player_position = Vector3.ZERO
 	else:
-		player_position = players.pick_random().position
-	mob.initialize(mob_spawn_location.position, player_position)
-	mob.squashed.connect($UserInterface/ScoreLabel._on_mob_squashed)
-	mob.squashed.connect(_on_mob_squashed.bind(mob))
-	add_child(mob)
+		player_position = players.pick_random().global_position
+	$MultiplayerSpawner.spawn([progress_ratio, player_position])
 
 func _on_player_hit(_id, player) -> void:
 	GameManager.Players[_id].alive = false
@@ -66,21 +91,18 @@ func _on_player_hit(_id, player) -> void:
 	$LooseSound.global_position = player.global_position
 	$LooseSound.play()
 
-func _unhandled_input(event):
-	if event.is_action_pressed("ui_accept") and $UserInterface/Retry.visible:
-		# This restarts the current scene.
-		_reset.rpc()
-
 func _on_player_jump(player) -> void:
 	$JumpSound.global_position = player.global_position
 	$JumpSound.play()
 
-func _on_mob_squashed(player_id, mob) -> void:
-	# GameManager.Players[player_id].score += 1
+func _on_mob_squashed(_player_id, mob) -> void:
 	$JumpSound.global_position = mob.global_position
 	$ScoreSound.play()
 
-# tools fucntions
+func _on_fall_detector_body_entered(body: Node3D) -> void:
+	body.die.rpc()
+
+# Tools fucntions
 
 func get_alive_players() -> Array:
 	var alive_players = []
@@ -93,6 +115,19 @@ func get_alive_players() -> Array:
 		playing = false
 	return alive_players
 
+func get_spawn_time() -> float:
+	var top_score = 100
+	var top_time = 0.1
+	var bottom_time = 1
+	var spawn_time = bottom_time - \
+			$UserInterface/ScoreLabel.score * ((top_time - bottom_time) / top_score)
+	return spawn_time
 
-func _on_fall_detector_body_entered(body:Node3D) -> void:
-	body.die.rpc()
+
+func get_mob_speed_mult() -> float:
+	var top_score = 100
+	var top_mult = 5
+	var bottom_mult = 0.5
+	var speed_mult = bottom_mult + \
+			$UserInterface/ScoreLabel.score * ((top_mult - bottom_mult) / top_score)
+	return speed_mult

@@ -4,6 +4,7 @@ extends CharacterBody3D
 # Put this at the top of the script.
 signal hit
 signal jump
+signal squashed()
 
 # How fast the player moves in meters per second.
 @export var speed = 14
@@ -85,7 +86,13 @@ func _physics_process(delta):
 		if collision.get_collider().is_in_group("mob"):
 			var mob = collision.get_collider()
 			if Vector3.UP.dot(collision.get_normal()) > 0.3:
-				mob.squash(bounce_impulse,  multiplayer.get_unique_id())
+				mob.squash.rpc(bounce_impulse, multiplayer.get_unique_id())
+				target_velocity.y = bounce_impulse
+				break
+		elif collision.get_collider().is_in_group("players"):
+			var player = collision.get_collider()
+			if Vector3.UP.dot(collision.get_normal()) > 0.3:
+				player.squash(multiplayer.get_unique_id())
 				target_velocity.y = bounce_impulse
 				break
 	# Moving the Character
@@ -104,3 +111,6 @@ func die():
 func _on_mob_detector_body_entered(_body: Node3D) -> void:
 	if $MultiplayerSynchronizer.get_multiplayer_authority() == multiplayer.get_unique_id():
 		die.rpc()
+
+func squash(player_id):
+	squashed.emit(player_id, get_multiplayer_authority_id)
