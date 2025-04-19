@@ -4,7 +4,7 @@ extends CharacterBody3D
 # Put this at the top of the script.
 signal hit
 signal jump
-signal squashed()
+signal squashed(jumper_id: int, squashed_id: int)
 
 # How fast the player moves in meters per second.
 @export var speed = 14
@@ -101,8 +101,6 @@ func _physics_process(delta):
 	velocity = target_velocity
 	move_and_slide()
 
-
-# And this function at the bottom.
 @rpc("any_peer", "call_local")
 func die():
 	alive = false

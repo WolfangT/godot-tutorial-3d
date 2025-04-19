@@ -43,7 +43,6 @@ func _reset():
 	$UserInterface/Retry.hide()
 	var index = 1
 	for _id in GameManager.Players:
-		var located = false
 		var current_player = player_scene.instantiate()
 		current_player.get_multiplayer_authority_id = _id
 		if GameManager.Players[_id].model != null:
@@ -53,14 +52,12 @@ func _reset():
 		current_player.jump.connect(_on_player_jump.bind(current_player))
 		current_player.hit.connect(_on_player_hit.bind(_id, current_player))
 		current_player.squashed.connect($UserInterface/ScoreLabel._on_player_squashed)
+		current_player.squashed.connect(_on_player_squashed)
 		add_child(current_player, true)
 		for spawn in get_tree().get_nodes_in_group("PlayerSpawnPoint"):
 			if spawn.name == str(index):
 				current_player.global_position = spawn.global_position
-				located = true
 				break
-		if not located:
-			current_player.global_position = $SpawnLocations / "0".global_position
 		index += 1
 	$MobTimer.start()
 
@@ -99,8 +96,17 @@ func _on_mob_squashed(_player_id, mob) -> void:
 	$JumpSound.global_position = mob.global_position
 	$ScoreSound.play()
 
+func _on_player_squashed(_jumper_id: int, squashed_id: int) -> void:
+	$JumpSound.global_position = GameManager.Players[squashed_id].model.global_position
+	$ScoreSound.play()
+
 func _on_fall_detector_body_entered(body: Node3D) -> void:
 	body.die.rpc()
+
+func _on_despawn_detector_body_exited(body: Node3D) -> void:
+	if body.is_in_group("mob"):
+		body.die.rpc()
+
 
 # Tools fucntions
 

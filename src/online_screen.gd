@@ -6,7 +6,7 @@ extends Control
 @export var PROTOCOL := "wss"
 @export var HOST_NAME := "www.wolfang.info.ve"
 @export var PORT := 9080
-@export var MESH := false
+@export var MESH := true
 
 var SIGNALING_SERVER := "%s://%s:%s" % [PROTOCOL, HOST_NAME, PORT]
 
