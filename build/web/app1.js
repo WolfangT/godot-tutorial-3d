@@ -709,7 +709,7 @@ const Engine = (function () {
 						initPromise = Promise.reject(new Error('A base path must be provided when calling `init` and the engine is not loaded.'));
 						return initPromise;
 					}
-					Engine.load(basePath, this.config.fileSizes[`${basePath}.wasm`]);
+					Engine.load(`.proxy/${basePath}`, this.config.fileSizes[`${basePath}.wasm`]);
 				}
 				const me = this;
 				function doInit(promise) {
@@ -754,7 +754,7 @@ const Engine = (function () {
 			 * @returns {Promise} A Promise that resolves once the file is loaded.
 			 */
 			preloadFile: function (file, path) {
-				return preloader.preload(file, path, this.config.fileSizes[file]);
+				return preloader.preload(`.proxy/${file}`, path, this.config.fileSizes[file]);
 			},
 
 			/**
