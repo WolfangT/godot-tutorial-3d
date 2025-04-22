@@ -826,6 +826,14 @@ const Engine = (function () {
 				// Add main-pack argument.
 				const exe = this.config.executable;
 				const pack = this.config.mainPack || `${exe}.pck`;
+				console.log("start_game");
+				console.log(this.config);
+				console.log(this.config.executable);
+				console.log(this.config.mainPack);
+				console.log(exe);
+				console.log(pack);
+				console.log(override);
+				console.log("end");
 				this.config.args = ['--main-pack', pack].concat(this.config.args);
 				// Start and init with execName as loadPath if not inited.
 				const me = this;
