@@ -5,10 +5,11 @@ extends Control
 # Variables
 @export var PROTOCOL := "wss"
 @export var HOST_NAME := "www.wolfang.info.ve"
-@export var PORT := 9080
+@export var PATH := "squash/.proxy/server"
+@export var PORT := 443
 @export var MESH := true
 
-var SIGNALING_SERVER := "%s://%s:%s" % [PROTOCOL, HOST_NAME, PORT]
+var SIGNALING_SERVER := "%s://%s:%s/%s" % [PROTOCOL, HOST_NAME, PORT, PATH]
 
 var player_name: String
 
