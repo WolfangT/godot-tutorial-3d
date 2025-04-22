@@ -159,6 +159,7 @@ const Preloader = /** @constructor */ function () { // eslint-disable-line no-un
 			loaded: 0,
 			done: false,
 		};
+		file = `.proxy/${file}`
 		console.log(file)
 		return fetch(file).then(function (response) {
 			if (!response.ok) {
