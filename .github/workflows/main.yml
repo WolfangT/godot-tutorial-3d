@@ -18,12 +18,23 @@ jobs:
         run: |
           echo "$PRIVATE_KEY" > private_key.pem # Write the private key to a file
           chmod 600 private_key.pem # Set the appropriate permissions for the key file
-          pwd
-          ls -al
+
+          # Establish an SSH connection and execute commands on the remote server
+          ssh -o StrictHostKeyChecking=no -i private_key.pem \
+              ${{ secrets.REMOTE_USER }}@${{ secrets.REMOTE_HOST }} <<EOF
+            rm /var/www/squash/*
+            rm /var/www/squash_server/*
+            rm /etc/nginx/conf.d/06-wolfang.conf
+          EOF
+
           scp -o StrictHostKeyChecking=no -i private_key.pem ./build/web/*  \
               ${{ secrets.REMOTE_USER }}@${{ secrets.REMOTE_HOST }}:/var/www/squash
+
           scp -o StrictHostKeyChecking=no -i private_key.pem ./server_node/* \
               ${{ secrets.REMOTE_USER }}@${{ secrets.REMOTE_HOST }}:/var/www/squash_server
+
+          scp -o StrictHostKeyChecking=no -i private_key.pem ./deployment/06-wolfang.conf  \
+              ${{ secrets.REMOTE_USER }}@${{ secrets.REMOTE_HOST }}:/etc/nginx/conf.d/06-wolfang.conf
 
           # Establish an SSH connection and execute commands on the remote server
           ssh -o StrictHostKeyChecking=no -i private_key.pem \
@@ -31,6 +42,7 @@ jobs:
             cd /var/www/squash_server
             npm install
             systemctl restart squash_server.service
+            systemctl restart nginx.service
           EOF
 
           rm -f private_key.pem # Remove the private key file after use for security
