@@ -20,12 +20,14 @@ jobs:
           chmod 600 private_key.pem # Set the appropriate permissions for the key file
 
           # Establish an SSH connection and execute commands on the remote server
+          echo "Started deleting old files"
           ssh -o StrictHostKeyChecking=no -i private_key.pem \
               ${{ secrets.REMOTE_USER }}@${{ secrets.REMOTE_HOST }} <<EOF
             rm -f /var/www/squash/*
             # find /var/www/squash_server/ -maxdepth 1 -type f -delete
             rm -f /etc/nginx/conf.d/06-wolfang.conf
           EOF
+          echo "Finish deleting old files"
 
           scp -o StrictHostKeyChecking=no -i private_key.pem ./build/web/*  \
               ${{ secrets.REMOTE_USER }}@${{ secrets.REMOTE_HOST }}:/var/www/squash
