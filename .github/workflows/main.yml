@@ -22,9 +22,9 @@ jobs:
           # Establish an SSH connection and execute commands on the remote server
           ssh -o StrictHostKeyChecking=no -i private_key.pem \
               ${{ secrets.REMOTE_USER }}@${{ secrets.REMOTE_HOST }} <<EOF
-            rm /var/www/squash/* 2>&1 
-            rm /var/www/squash_server/* 2>&1
-            rm /etc/nginx/conf.d/06-wolfang.conf 2>&1
+            rm -f /var/www/squash/*
+            find /var/www/squash_server/ -maxdepth 1 -type f -delete
+            rm -f /etc/nginx/conf.d/06-wolfang.conf
           EOF
 
           scp -o StrictHostKeyChecking=no -i private_key.pem ./build/web/*  \
