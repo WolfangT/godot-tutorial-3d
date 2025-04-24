@@ -29,12 +29,15 @@ jobs:
           EOF
           echo "Finish deleting old files"
 
+          echo "Copying game"
           scp -o StrictHostKeyChecking=no -i private_key.pem ./build/web/*  \
               ${{ secrets.REMOTE_USER }}@${{ secrets.REMOTE_HOST }}:/var/www/squash
 
+          echo "Copying server"
           scp -o StrictHostKeyChecking=no -i private_key.pem ./server_node/* \
               ${{ secrets.REMOTE_USER }}@${{ secrets.REMOTE_HOST }}:/var/www/squash_server
 
+          echo "Copying nginx conf"
           scp -o StrictHostKeyChecking=no -i private_key.pem ./deployment/06-wolfang.conf  \
               ${{ secrets.REMOTE_USER }}@${{ secrets.REMOTE_HOST }}:/etc/nginx/conf.d/06-wolfang.conf
 
