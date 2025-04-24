@@ -23,7 +23,7 @@ jobs:
           ssh -o StrictHostKeyChecking=no -i private_key.pem \
               ${{ secrets.REMOTE_USER }}@${{ secrets.REMOTE_HOST }} <<EOF
             rm /var/www/squash/*
-            rm /var/www/squash_server/*
+            # rm /var/www/squash_server/*
             rm /etc/nginx/conf.d/06-wolfang.conf
           EOF
 
