@@ -5,7 +5,7 @@ extends Control
 # Variables
 @export var PROTOCOL := "wss"
 @export var HOST_NAME := "www.wolfang.info.ve"
-@export var PATH := "squash/.proxy/server"
+@export var PATH := "squash/server"
 @export var PORT := 443
 @export var MESH := true
 
